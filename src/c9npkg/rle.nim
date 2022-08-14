@@ -8,13 +8,13 @@ func encodeNaiveRLE* (data: string, limit: int): string =
     if index < data.len and data[index-1] == data[index] and counter < limit:
       counter += 1
     else:
-      result.add data[index-1]
       result.add char(counter)
+      result.add data[index-1]
       counter = 1
 
 func decodeNativeRLE* (data: openArray[char]): string =
   for index in 0 ..< data.len div 2:
-    result.add repeat(data[index*2], int(data[index*2+1]))
+    result.add repeat(data[index*2+1], int(data[index*2]))
 
 func encodeFlagRLE* (data: string, flag: char): string =
   var counter = 1
@@ -25,15 +25,15 @@ func encodeFlagRLE* (data: string, flag: char): string =
       result.add data[index-1]
     else:
       result.add flag
-      result.add data[index-1]
       result.add char(counter)
+      result.add data[index-1]
       counter = 1
 
 func decodeFlagRLE* (data: openArray[char], flag: char): string =
   var index = 0
   while index < data.len:
     if data[index] == flag:
-      result.add repeat(data[index+1], int(data[index+2]))
+      result.add repeat(data[index+2], int(data[index+1]))
       index += 2
     else:
       result.add data[index]
